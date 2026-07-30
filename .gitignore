@@ -1,0 +1,38 @@
+# Editor and local assistant files
+.aider*
+.vs/
+.vscode/
+*.user
+*.suo
+
+# .NET build output
+**/bin/
+**/obj/
+*.userprefs
+
+# Frontend dependencies and generated files
+**/node_modules/
+**/dist/
+**/.vite/
+**/tsconfig.tsbuildinfo
+npm-debug.log*
+
+# Release output and generated installer files
+artifacts/
+release/
+release-next/
+
+# Local runtime data and test output
+reports/
+logs/
+backups/
+backup_config.json
+data/targets.json
+
+# Operating-system files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Private local notes and files (never publish)
+priv/

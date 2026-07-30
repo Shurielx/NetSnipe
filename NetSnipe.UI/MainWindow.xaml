@@ -1,0 +1,15 @@
+<Window x:Class="NetSnipe.UI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        Title="NetSnipe"
+        Width="1440"
+        Height="920"
+        MinWidth="720"
+        MinHeight="620"
+        WindowStartupLocation="CenterScreen"
+        Background="#0A1016">
+  <Grid>
+    <wv2:WebView2 x:Name="Browser" />
+  </Grid>
+</Window>
