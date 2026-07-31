@@ -55,4 +55,8 @@ export const bridge = {
   cancel(): void {
     webview?.postMessage({ type: "cancel" });
   },
+
+  window(action: "minimize" | "maximize" | "close" | "drag"): void {
+    webview?.postMessage({ type: "window", action });
+  },
 };

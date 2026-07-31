@@ -1,10 +1,18 @@
 .app-shell { display: grid; grid-template-columns: 244px minmax(0, 1fr); min-height: 100vh; }
+.window-bar { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; padding-left: 14px; background: #0d1821; border-bottom: 1px solid rgba(92, 150, 164, .22); user-select: none; }
+.window-brand { display: inline-flex; align-items: center; gap: 8px; height: 100%; padding: 0; color: var(--muted-strong); background: transparent; border: 0; font-size: 12px; font-weight: 700; }
+.window-brand .brand-mark { width: 22px; height: 22px; border-radius: 7px 3px 7px 3px; font-size: 12px; }
+.window-controls { display: flex; align-self: stretch; }
+.window-controls button { width: 48px; color: var(--muted-strong); background: transparent; border: 0; font-size: 17px; line-height: 1; }
+.window-controls button:hover { background: rgba(93, 216, 223, .14); color: var(--text); }
+.window-controls .window-close:hover { background: #b8404b; color: white; }
 .sidebar { display: flex; flex-direction: column; padding: 28px 18px 22px; background: linear-gradient(180deg, rgba(18, 34, 45, .96), rgba(10, 18, 25, .98)); border-right: 1px solid rgba(92, 150, 164, .2); }
-.brand-lockup { display: flex; align-items: center; gap: 11px; padding: 2px 10px 42px; }
+.brand-lockup { display: none; align-items: center; gap: 11px; padding: 2px 10px 28px; }
 .brand-mark { display: grid; place-items: center; width: 34px; height: 34px; border: 1px solid var(--cyan); border-radius: 11px 4px 11px 4px; color: var(--cyan); font-weight: 800; }
 .brand-name { letter-spacing: -.03em; font-size: 19px; font-weight: 760; }
 .brand-caption { margin-top: 2px; color: var(--muted); font-size: 10px; letter-spacing: .13em; text-transform: uppercase; }
 .nav-list { display: grid; gap: 5px; }
+.nav-group-label { margin: 13px 10px 5px; color: #5f7f8e; font-size: 9px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
 .nav-item { display: grid; gap: 2px; width: 100%; padding: 11px 13px; color: var(--muted); text-align: left; background: transparent; border: 1px solid transparent; border-radius: 10px; transition: .18s ease; }
 .nav-item:hover { color: var(--text); background: rgba(68, 121, 135, .13); border-color: rgba(93, 216, 223, .18); }
 .nav-item.active { color: var(--text); background: linear-gradient(90deg, rgba(52, 133, 143, .3), rgba(52, 133, 143, .08)); border-color: rgba(93, 216, 223, .42); box-shadow: inset 3px 0 0 var(--cyan); }
@@ -15,6 +23,8 @@
 .main-content { min-width: 0; }
 .topbar { display: flex; justify-content: space-between; align-items: center; min-height: 82px; padding: 0 46px; border-bottom: 1px solid rgba(69, 105, 120, .25); background: rgba(9, 17, 23, .42); }
 .topbar-value { margin-top: 5px; font-size: 15px; font-weight: 650; }
+.topbar-status { display: inline-flex; align-items: center; gap: 14px; }
+.build-version { color: var(--muted); font-family: "Cascadia Code", Consolas, monospace; font-size: 10px; letter-spacing: .08em; }
 .status-pill { display: inline-flex; gap: 8px; align-items: center; padding: 8px 11px; color: var(--green); background: rgba(64, 135, 105, .14); border: 1px solid rgba(123, 218, 168, .28); border-radius: 99px; font-size: 12px; }
 .status-pill.attention { color: var(--amber); border-color: rgba(237, 186, 105, .38); background: rgba(237, 186, 105, .1); }
 .page-area { max-width: 1320px; margin: 0 auto; padding: 42px 46px 80px; }
@@ -50,13 +60,15 @@
   .page-header { display: grid; gap: 18px; align-items: start; }
   .page-header h1 { font-size: 34px; }
   .hero-grid, .two-column-grid, .workspace-grid, .quick-grid { grid-template-columns: 1fr; }
+  .test-guide { grid-template-columns: 1fr 1fr; }
   .profile-grid { grid-template-columns: 1fr; }
   .profile-table { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 560px) {
-  .topbar-status { display: none; }
+  .status-pill { display: none; }
   .page-header h1 { font-size: 29px; }
   .hero-facts, .form-grid, .comparison-grid, .profile-table { grid-template-columns: 1fr; }
+  .test-guide { grid-template-columns: 1fr; }
   .metric-grid { grid-template-columns: repeat(2, 1fr); }
   .progress-stats { flex-wrap: wrap; }
 }

@@ -96,7 +96,7 @@ run.bat cli      Run the PowerShell CLI
 
 ### Build A Release
 
-The easiest way is to open `devbuild` and double-click:
+The easiest option is to open `devbuild` and double-click:
 
 ```text
 BUILD-ALL.bat
@@ -105,9 +105,18 @@ BUILD-ALL.bat
 This creates both distributable files:
 
 ```text
-artifacts\installer\NetSnipe-Setup-win-x64.exe
-artifacts\NetSnipe-Portable-win-x64.zip
+main: artifacts\installer\NetSnipe-V1.1-Setup-win-x64.exe
+      artifacts\NetSnipe-V1.1-Portable-win-x64.zip
+beta: artifacts\installer\NetSnipe-B1.1-Setup-win-x64.exe
+      artifacts\NetSnipe-B1.1-Portable-win-x64.zip
+dev:  artifacts\installer\NetSnipe-D1.1-Setup-win-x64.exe
+      artifacts\NetSnipe-D1.1-Portable-win-x64.zip
 ```
+
+The build reads the current Git branch automatically. `main` creates the
+stable `V` build, `beta` creates the test `B` build, and `dev` creates the
+developer `D` build. You can override it explicitly with
+`-Channel Main`, `-Channel Beta`, or `-Channel Dev`.
 
 For one output only:
 
@@ -116,7 +125,9 @@ BUILD-PORTABLE.bat    Build the portable ZIP
 BUILD-INSTALLER.bat   Build the installer EXE
 ```
 
-The click-by-click guide is in [`devbuild/README.txt`](devbuild/README.txt).
+The public `devbuild` directory intentionally contains only minimal helper
+scripts. Private build archiving and GitHub publishing are kept outside the
+public repository.
 
 The same build can be started from PowerShell:
 

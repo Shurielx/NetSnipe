@@ -8,12 +8,12 @@ export default function DiagnosticsPage({ onStart, running }: Props) {
   const [seconds, setSeconds] = useState("60");
   return (
     <>
-      <PageHeader eyebrow="MEASURE / 01" title="One-time diagnostics" description="A fixed health check for the current connection. It does not use the Custom ping settings on the next page." />
+      <PageHeader eyebrow="TEST CONNECTION / 01" title="Connection check" description="A broad, read-only snapshot of your current path. It checks the gateway plus two public Internet references in one run." />
       <div className="workspace-grid">
         <Panel className="workspace-main" eyebrow="WHAT WILL HAPPEN" title="One test, three reference points">
           <p className="lead-copy">NetSnipe resolves the active gateway at runtime, then measures it together with two public Internet reference addresses.</p>
           <div className="step-list"><div><span>01</span><strong>Local path</strong><p>Your actual gateway, such as 192.168.1.1.</p></div><div><span>02</span><strong>External reference</strong><p>1.1.1.1 as a stable Internet comparison.</p></div><div><span>03</span><strong>External reference</strong><p>8.8.8.8 as a second route comparison.</p></div></div>
-          <div className="callout callout-blue"><strong>Important</strong><span>Changing the target, rate or duration on Custom ping will not change this test.</span></div>
+           <div className="callout callout-blue"><strong>Use this first</strong><span>This is not a replacement for Target ping. It gives you three reference points so you can see whether the problem starts locally or farther out.</span></div>
         </Panel>
         <Panel className="workspace-side" eyebrow="SETTINGS" title="Diagnostic budget">
           <label className="field-label">Total test budget (seconds)<input className="field-input" type="number" min="15" max="900" value={seconds} onChange={(event) => setSeconds(event.target.value)} /></label>

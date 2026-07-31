@@ -8,8 +8,38 @@
         MinWidth="720"
         MinHeight="620"
         WindowStartupLocation="CenterScreen"
-        Background="#0A1016">
-  <Grid>
-    <wv2:WebView2 x:Name="Browser" />
+        Background="Transparent"
+        WindowStyle="None"
+        ResizeMode="CanResize"
+        AllowsTransparency="True"
+        UseLayoutRounding="True">
+  <Grid Background="#0A1016">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="38" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
+    <Border Grid.Row="0" Background="#0D1821" BorderBrush="#263A49" BorderThickness="0,0,0,1"
+            MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="14,0,0,0">
+          <Border Width="22" Height="22" BorderBrush="#5DD8DF" BorderThickness="1" CornerRadius="7,3,7,3">
+            <TextBlock Text="N" Foreground="#5DD8DF" FontSize="12" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+          </Border>
+          <TextBlock Text="NetSnipe" Margin="8,0,0,0" Foreground="#B4C7D2" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" />
+        </StackPanel>
+        <StackPanel Grid.Column="1" Orientation="Horizontal">
+          <Button Content="&#x2212;" Click="MinimizeButton_Click" Width="48" Foreground="#B4C7D2" Background="Transparent" BorderThickness="0" FontSize="16" />
+          <Button Content="&#x25A1;" Click="MaximizeButton_Click" Width="48" Foreground="#B4C7D2" Background="Transparent" BorderThickness="0" FontSize="14" />
+          <Button Content="&#x00D7;" Click="CloseButton_Click" Width="48" Foreground="#B4C7D2" Background="Transparent" BorderThickness="0" FontSize="17" />
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <wv2:WebView2 x:Name="Browser" Grid.Row="1" />
   </Grid>
 </Window>

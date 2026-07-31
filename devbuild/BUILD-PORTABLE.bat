@@ -15,6 +15,6 @@ if errorlevel 1 (
 
 echo.
 echo PORTABLE BUILD COMPLETE.
-echo The ZIP is in artifacts\NetSnipe-Portable-win-x64.zip
+echo The ZIP is in the artifacts folder with the channel/version name.
 start "" explorer.exe "%~dp0..\artifacts"
 pause

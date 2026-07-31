@@ -3,6 +3,7 @@ function Test-NetSnipeTarget {
     $interval = [math]::Max(100, [math]::Round(1000 / $Rate))
     $sent = 0; $lost = 0
     $values = [System.Collections.Generic.List[double]]::new()
+    $samples = [System.Collections.Generic.List[object]]::new()
     $jitter = [System.Collections.Generic.List[double]]::new()
     $previous = $null
     $ping = [System.Net.NetworkInformation.Ping]::new()
@@ -15,6 +16,7 @@ function Test-NetSnipeTarget {
             $reply = $ping.Send($Target, 2000)
             if ($reply.Status -eq 'Success') {
                 $latency = [double]$reply.RoundtripTime; $lastLatency = $latency; $values.Add($latency)
+                $samples.Add([ordered]@{ elapsed_seconds = [math]::Round($watch.Elapsed.TotalSeconds, 2); latency_ms = $latency })
                 if ($null -ne $previous) { $jitter.Add([math]::Abs($latency - $previous)) }
                 $previous = $latency
             } else { $lost++; $previous = $null }
@@ -36,6 +38,7 @@ function Test-NetSnipeTarget {
         median_ms = if ($sorted.Count) { [math]::Round($sorted[[math]::Floor($sorted.Count / 2)], 2) } else { $null }
         p95_ms = if ($sorted.Count) { [math]::Round($sorted[[math]::Min($sorted.Count - 1, [math]::Floor($sorted.Count * .95))], 2) } else { $null }
         jitter_ms = if ($jitter.Count) { [math]::Round(($jitter | Measure-Object -Average).Average, 2) } else { $null }
+        samples = @($samples)
     }
 }
 

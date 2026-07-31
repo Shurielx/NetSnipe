@@ -29,6 +29,12 @@ export type Measurement = {
   median_ms?: number | null;
   p95_ms?: number | null;
   jitter_ms?: number | null;
+  samples?: LatencySample[];
+};
+
+export type LatencySample = {
+  elapsed_seconds?: number;
+  latency_ms?: number | null;
 };
 
 export type BackendResult = {

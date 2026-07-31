@@ -1,23 +1,36 @@
-#define MyAppName "NetSnipe"
-#define MyAppVersion "1.0.0"
+#ifndef MyAppName
+  #define MyAppName "NetSnipe V1.1 - Main"
+#endif
+#ifndef MyAppVersion
+  #define MyAppVersion "1.1"
+#endif
+#ifndef MyAppChannel
+  #define MyAppChannel "Main"
+#endif
+#ifndef MyAppId
+  #define MyAppId "{{B8B1A8B2-4D9F-4B91-8F39-2A4D6E3C1D72}}"
+#endif
+#ifndef MyOutputBaseFilename
+  #define MyOutputBaseFilename "NetSnipe-V1.1-Setup-win-x64"
+#endif
 #define MyAppPublisher "NetSnipe"
 #define MyAppExeName "NetSnipe.exe"
 
 [Setup]
-AppId={{B8B1A8B2-4D9F-4B91-8F39-2A4D6E3C1D72}
-AppName={#MyAppName}
+AppId={#MyAppId}
+AppName=NetSnipe {#MyAppChannel}
 AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
-DefaultDirName={autopf}\NetSnipe
-DefaultGroupName=NetSnipe
+DefaultDirName={autopf}\NetSnipe\{#MyAppChannel}
+DefaultGroupName=NetSnipe {#MyAppChannel}
 DisableProgramGroupPage=yes
 PrivilegesRequired=admin
 OutputDir=..\artifacts\installer
-OutputBaseFilename=NetSnipe-Setup-win-x64
+OutputBaseFilename={#MyOutputBaseFilename}
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
-ArchitecturesInstallIn64BitMode=x64
+ArchitecturesInstallIn64BitMode=x64compatible
 UninstallDisplayIcon={app}\{#MyAppExeName}
 
 [Languages]
@@ -27,16 +40,18 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Source: "..\artifacts\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\artifacts\prerequisites\MicrosoftEdgeWebView2RuntimeInstallerX64.exe"; DestDir: "{tmp}"; Flags: ignoreversion deleteafterinstall; Check: not IsWebView2Installed
 
-[Dirs]
-Name: "{localappdata}\NetSnipe"
+[InstallDelete]
+; Application state is stored under LocalAppData, so the install directory can
+; be cleared safely before an in-place upgrade. This removes obsolete files.
+Type: filesandordirs; Name: "{app}\*"
 
 [Icons]
-Name: "{autoprograms}\NetSnipe"; Filename: "{app}\{#MyAppExeName}"
-Name: "{autodesktop}\NetSnipe"; Filename: "{app}\{#MyAppExeName}"
+Name: "{autoprograms}\NetSnipe {#MyAppChannel}"; Filename: "{app}\{#MyAppExeName}"
+Name: "{autodesktop}\NetSnipe {#MyAppChannel}"; Filename: "{app}\{#MyAppExeName}"
 
 [Run]
 Filename: "{tmp}\MicrosoftEdgeWebView2RuntimeInstallerX64.exe"; Parameters: "/silent /install"; StatusMsg: "Installing Microsoft Edge WebView2 Runtime..."; Flags: waituntilterminated; Check: not IsWebView2Installed
-Filename: "{app}\{#MyAppExeName}"; Description: "Launch NetSnipe"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#MyAppExeName}"; Description: "Launch NetSnipe"; Flags: shellexec nowait postinstall skipifsilent runasoriginaluser
 
 [UninstallDelete]
 Type: dirifempty; Name: "{app}"

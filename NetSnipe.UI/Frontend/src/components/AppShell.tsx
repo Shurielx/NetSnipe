@@ -2,14 +2,14 @@ import type { ReactNode } from "react";
 
 type Page = "dashboard" | "diagnostics" | "ping" | "dns" | "bufferbloat" | "profiles" | "monitor";
 
-const navigation: Array<{ id: Page; label: string; eyebrow: string }> = [
-  { id: "dashboard", label: "Overview", eyebrow: "Home" },
-  { id: "diagnostics", label: "Diagnostics", eyebrow: "Measure" },
-  { id: "ping", label: "Custom ping", eyebrow: "Measure" },
-  { id: "dns", label: "DNS resolution", eyebrow: "Measure" },
-  { id: "bufferbloat", label: "Bufferbloat", eyebrow: "Measure" },
-  { id: "profiles", label: "Profiles", eyebrow: "Change" },
-  { id: "monitor", label: "History monitor", eyebrow: "Observe" },
+const navigation: Array<{ id: Page; label: string; eyebrow: string; group: string }> = [
+  { id: "dashboard", label: "Overview", eyebrow: "Home", group: "Start here" },
+  { id: "diagnostics", label: "Connection check", eyebrow: "Broad snapshot", group: "Test connection" },
+  { id: "ping", label: "Target ping", eyebrow: "One destination", group: "Test connection" },
+  { id: "dns", label: "DNS check", eyebrow: "Name lookup", group: "Test connection" },
+  { id: "bufferbloat", label: "Bufferbloat", eyebrow: "Under load", group: "Test connection" },
+  { id: "profiles", label: "Network profiles", eyebrow: "Change settings", group: "Change settings" },
+  { id: "monitor", label: "Connection history", eyebrow: "Runs over time", group: "Observe" },
 ];
 
 type Props = {
@@ -33,11 +33,14 @@ export default function AppShell({ page, onNavigate, adapter, status, children }
         </div>
 
         <nav className="nav-list" aria-label="Main navigation">
-          {navigation.map((item) => (
-            <button className={`nav-item ${page === item.id ? "active" : ""}`} key={item.id} onClick={() => onNavigate(item.id)}>
-              <span className="nav-eyebrow">{item.eyebrow}</span>
-              <span>{item.label}</span>
-            </button>
+          {navigation.map((item, index) => (
+            <div key={item.id}>
+              {(index === 0 || navigation[index - 1].group !== item.group) && <div className="nav-group-label">{item.group}</div>}
+              <button className={`nav-item ${page === item.id ? "active" : ""}`} onClick={() => onNavigate(item.id)}>
+                <span className="nav-eyebrow">{item.eyebrow}</span>
+                <span>{item.label}</span>
+              </button>
+            </div>
           ))}
         </nav>
 
@@ -54,6 +57,7 @@ export default function AppShell({ page, onNavigate, adapter, status, children }
             <div className="topbar-value">{adapter || "Detecting adapter..."}</div>
           </div>
           <div className="topbar-status">
+            <span className="build-version" title="Build currently running">BUILD {import.meta.env.VITE_NETSNIPE_VERSION || "DEV"}</span>
             <span className={`status-pill ${status === "Attention" ? "attention" : ""}`}>
               <span className="dot dot-green" /> {status || "Ready"}
             </span>

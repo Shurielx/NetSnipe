@@ -155,6 +155,7 @@ public sealed class PowerShellRunner : IDisposable
             case "OptimizeProfile":
                 AddString(startInfo, args, "Profile", required: true);
                 if (TryGetString(args, "ChannelWidth", out var width)) AddArgument(startInfo, "-ChannelWidth", width);
+                if (TryGetString(args, "CustomSettingsJson", out var customSettings)) AddArgument(startInfo, "-CustomSettingsJson", customSettings);
                 if (action == "OptimizeProfile") AddInt(startInfo, args, "DiagnosticSeconds", 15, 15, 900);
                 break;
             case "AddTarget":
@@ -170,6 +171,7 @@ public sealed class PowerShellRunner : IDisposable
             case "BandwidthRecommendation":
             case "GamingPreview":
             case "RestoreLatest":
+            case "RestoreWifiScanning":
             case "StartMonitor":
             case "StopMonitor":
             case "MonitorStatus":

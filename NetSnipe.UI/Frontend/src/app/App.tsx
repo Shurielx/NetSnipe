@@ -101,14 +101,19 @@ export default function App() {
     return Boolean(response?.success);
   };
 
-  const applyProfile = async (profile: string, channelWidth: string) => {
+  const applyProfile = async (profile: string, channelWidth: string, customSettings?: Record<string, boolean>) => {
     const accepted = window.confirm(`Create a backup and apply the ${profile} profile?\n\nNo settings are changed if you cancel.`);
     if (!accepted) return;
     if (profile === "Gaming Balanced") {
       await execute("OptimizeProfile", { Profile: profile, ChannelWidth: channelWidth, DiagnosticSeconds: 15 }, "Gaming profile measurement");
     } else {
-      await execute("ApplyProfile", { Profile: profile, ChannelWidth: channelWidth }, "Apply profile");
+      await execute("ApplyProfile", { Profile: profile, ChannelWidth: channelWidth, ...(customSettings ? { CustomSettingsJson: JSON.stringify(customSettings) } : {}) }, "Apply profile");
     }
+  };
+
+  const restoreWifiScanning = async () => {
+    if (!window.confirm("Create a backup and restore Wi-Fi network scanning?")) return;
+    await execute("RestoreWifiScanning", {}, "Restore Wi-Fi scanning");
   };
 
   const pageContent = () => {
@@ -117,7 +122,7 @@ export default function App() {
       case "ping": return <PingPage status={status} targets={targets} running={running && activeAction === "PingTest"} onAddTarget={addTarget} onStart={(target, rate, seconds) => void execute("PingTest", { PingTarget: target, PingRate: rate, PingSeconds: seconds }, "Custom ping")} />;
       case "dns": return <DnsPage running={running && activeAction === "DnsTest"} onStart={() => void execute("DnsTest", {}, "DNS test")} />;
       case "bufferbloat": return <BufferbloatPage running={running && activeAction === "Bufferbloat"} onStart={(downloadMb, seconds) => void execute("Bufferbloat", { BufferbloatDownloadMb: downloadMb, BufferbloatSeconds: seconds }, "Bufferbloat test")} />;
-      case "profiles": return <ProfilesPage running={running && (activeAction === "ApplyProfile" || activeAction === "OptimizeProfile")} onApply={applyProfile} />;
+      case "profiles": return <ProfilesPage running={running && (activeAction === "ApplyProfile" || activeAction === "OptimizeProfile" || activeAction === "RestoreWifiScanning")} onApply={applyProfile} onRestoreWifiScanning={restoreWifiScanning} />;
       case "monitor": return <MonitorPage running={monitorRunning} latest={monitorLatest} onRefresh={() => void refreshMonitor()} onStart={() => void execute("StartMonitor", {}, "Start monitor")} onStop={() => void execute("StopMonitor", {}, "Stop monitor")} />;
       default: return <DashboardPage status={status} targets={targets} monitorRunning={monitorRunning} onRefresh={() => void refreshStatus()} onOpen={setPage} />;
     }

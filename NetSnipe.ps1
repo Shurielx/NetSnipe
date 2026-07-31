@@ -8,7 +8,7 @@
 #Requires -RunAsAdministrator
 
 param(
-    [ValidateSet('Menu','Status','Diagnostics','PingTest','GamingPreview','BandwidthRecommendation','RestoreLatest','ApplyProfile','OptimizeProfile','ProfilePreview','DnsTest','Bufferbloat','StartMonitor','StopMonitor','MonitorStatus','MonitorLatest','Monitor','ListTargets','AddTarget','RemoveTarget')]
+    [ValidateSet('Menu','Status','Diagnostics','PingTest','GamingPreview','BandwidthRecommendation','RestoreLatest','RestoreWifiScanning','ApplyProfile','OptimizeProfile','ProfilePreview','DnsTest','Bufferbloat','StartMonitor','StopMonitor','MonitorStatus','MonitorLatest','Monitor','ListTargets','AddTarget','RemoveTarget')]
     [string]$Action = 'Menu',
     [switch]$JsonOutput,
     [string]$DataRoot = '',
@@ -24,7 +24,8 @@ param(
     [string]$ChannelWidth = 'Auto',
     [string]$TargetName = '',
     [string]$TargetAddress = '',
-    [string]$TargetId = ''
+    [string]$TargetId = '',
+    [string]$CustomSettingsJson = ''
 )
 
 $scriptRoot = $PSScriptRoot
@@ -74,6 +75,7 @@ function Invoke-NetSnipeJsonAction {
             'GamingPreview' { $result.data = Get-NetSnipeProfilePreview -Name 'Gaming Balanced' }
             'ProfilePreview' { $result.data = Get-NetSnipeProfilePreview -Name $Profile }
             'ApplyProfile' { $result.data = Set-NetSnipeProfile -Name $Profile -Width $ChannelWidth }
+            'RestoreWifiScanning' { $result.data = Enable-NetSnipeWifiScanning }
             'OptimizeProfile' { $result.data = Invoke-NetSnipeOptimizeProfile -Name $Profile -Seconds $DiagnosticSeconds }
             'RestoreLatest' { $result.data = Restore-NetSnipeCurrentConfig }
             'StartMonitor' { $result.data = Start-NetSnipeMonitor }

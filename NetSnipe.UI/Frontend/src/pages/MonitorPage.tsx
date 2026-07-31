@@ -6,11 +6,11 @@ type Props = { running: boolean; onStart: () => void; onStop: () => void; onRefr
 export default function MonitorPage({ running, onStart, onStop, onRefresh, latest }: Props) {
   return (
     <>
-      <PageHeader eyebrow="OBSERVE / HISTORY" title="Continuous connection history" description="Unlike one-time diagnostics, the monitor keeps a separate hidden worker alive and appends periodic measurements to the local NetSnipe data folder until you stop it." action={<button className="button button-quiet" onClick={onRefresh}>Refresh status</button>} />
+      <PageHeader eyebrow="OBSERVE / HISTORY" title="Connection history" description="Unlike a one-time test, this keeps measuring in the background and records how the connection behaves while you use the computer." action={<button className="button button-quiet" onClick={onRefresh}>Refresh status</button>} />
       <div className="workspace-grid">
         <Panel className="workspace-main" eyebrow="WHAT IS DIFFERENT" title="One-time test versus background worker">
           <div className="comparison-grid"><div><span className="comparison-label">Diagnostics</span><strong>Runs once</strong><p>Shows a result in the GUI and exits automatically.</p></div><div><span className="comparison-label">Monitor</span><strong>Runs continuously</strong><p>Measures repeatedly in another process and keeps a local history.</p></div></div>
-          <div className="callout callout-blue"><strong>Local history</strong><span>Monitoring does not change network settings. It records successful and failed measurements so a later graph can show patterns over time.</span></div>
+          <div className="callout callout-blue"><strong>When to use it</strong><span>Start this before reproducing an intermittent problem. It is not a faster diagnostics test: it is a background recorder for problems that appear later.</span></div>
         </Panel>
         <Panel className="workspace-side" eyebrow="WORKER STATUS" title={running ? "Monitor is running" : "Monitor is stopped"}>
           <div className={`status-large ${running ? "online" : "offline"}`}><span className="dot" />{running ? "Collecting measurements" : "No background worker"}</div>

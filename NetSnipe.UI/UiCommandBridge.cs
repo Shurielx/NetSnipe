@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Microsoft.Web.WebView2.Core;
+using System.Windows.Threading;
 
 namespace NetSnipe.UI;
 
@@ -9,16 +10,18 @@ public sealed class UiCommandBridge
     {
         "Status", "Diagnostics", "PingTest", "DnsTest", "Bufferbloat", "BandwidthRecommendation", "GamingPreview",
         "ProfilePreview", "ApplyProfile", "OptimizeProfile", "RestoreLatest", "StartMonitor", "StopMonitor",
-        "MonitorStatus", "MonitorLatest", "ListTargets", "AddTarget", "RemoveTarget",
+        "MonitorStatus", "MonitorLatest", "ListTargets", "AddTarget", "RemoveTarget", "RestoreWifiScanning",
     };
 
     private readonly CoreWebView2 _webView;
+    private readonly Dispatcher _dispatcher;
     private readonly PowerShellRunner _runner;
     private CancellationTokenSource? _activeCancellation;
 
-    public UiCommandBridge(CoreWebView2 webView, PowerShellRunner runner)
+    public UiCommandBridge(CoreWebView2 webView, Dispatcher dispatcher, PowerShellRunner runner)
     {
         _webView = webView;
+        _dispatcher = dispatcher;
         _runner = runner;
     }
 
@@ -29,6 +32,12 @@ public sealed class UiCommandBridge
         using var document = JsonDocument.Parse(eventArgs.WebMessageAsJson);
         var message = document.RootElement;
         var type = message.TryGetProperty("type", out var typeValue) ? typeValue.GetString() : null;
+        if (type == "window")
+        {
+            var windowActionName = message.TryGetProperty("action", out var windowAction) ? windowAction.GetString() : null;
+            _ = _dispatcher.BeginInvoke(() => HandleWindowAction(windowActionName));
+            return;
+        }
         if (type == "cancel")
         {
             _activeCancellation?.Cancel();
@@ -67,18 +76,51 @@ public sealed class UiCommandBridge
         }
     }
 
-    private void PostProgress(JsonElement payload) => _webView.PostWebMessageAsJson(JsonSerializer.Serialize(new { type = "progress", payload }));
+    private void PostProgress(JsonElement payload) => PostWebMessage(JsonSerializer.Serialize(new { type = "progress", payload }));
 
     private void PostResult(string id, string payloadJson)
     {
         try
         {
             using var payload = JsonDocument.Parse(payloadJson);
-            _webView.PostWebMessageAsJson(JsonSerializer.Serialize(new { type = "result", id, payload = payload.RootElement }));
+            PostWebMessage(JsonSerializer.Serialize(new { type = "result", id, payload = payload.RootElement }));
         }
         catch (JsonException)
         {
-            _webView.PostWebMessageAsJson(JsonSerializer.Serialize(new { type = "result", id, payload = new { success = false, error = "The backend returned invalid JSON." } }));
+            PostWebMessage(JsonSerializer.Serialize(new { type = "result", id, payload = new { success = false, error = "The backend returned invalid JSON." } }));
+        }
+    }
+
+    private void PostWebMessage(string message)
+    {
+        if (_dispatcher.CheckAccess())
+        {
+            _webView.PostWebMessageAsJson(message);
+            return;
+        }
+
+        _ = _dispatcher.BeginInvoke(() => _webView.PostWebMessageAsJson(message));
+    }
+
+    private void HandleWindowAction(string? action)
+    {
+        var window = System.Windows.Application.Current.MainWindow;
+        if (window is null) return;
+        switch (action)
+        {
+            case "minimize":
+                window.WindowState = System.Windows.WindowState.Minimized;
+                break;
+            case "maximize":
+                window.WindowState = window.WindowState == System.Windows.WindowState.Maximized ? System.Windows.WindowState.Normal : System.Windows.WindowState.Maximized;
+                break;
+            case "close":
+                window.Close();
+                break;
+            case "drag":
+                if (window.WindowState == System.Windows.WindowState.Maximized) window.WindowState = System.Windows.WindowState.Normal;
+                try { window.DragMove(); } catch (InvalidOperationException) { }
+                break;
         }
     }
 

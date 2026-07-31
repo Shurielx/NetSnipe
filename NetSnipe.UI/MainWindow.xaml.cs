@@ -1,5 +1,6 @@
 using System.IO;
 using System.Windows;
+using System.Windows.Input;
 using Microsoft.Web.WebView2.Core;
 
 namespace NetSnipe.UI;
@@ -21,12 +22,20 @@ public partial class MainWindow : Window
     {
         try
         {
-            await Browser.EnsureCoreWebView2Async();
+            var webViewDataPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "NetSnipe",
+                "WebView2");
+            Directory.CreateDirectory(webViewDataPath);
+            var webViewEnvironment = await CoreWebView2Environment.CreateAsync(
+                browserExecutableFolder: null,
+                userDataFolder: webViewDataPath);
+            await Browser.EnsureCoreWebView2Async(webViewEnvironment);
             Browser.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
             Browser.CoreWebView2.Settings.AreDevToolsEnabled = true;
             Browser.CoreWebView2.Settings.IsZoomControlEnabled = false;
 
-            _bridge = new UiCommandBridge(Browser.CoreWebView2, _runner);
+            _bridge = new UiCommandBridge(Browser.CoreWebView2, Dispatcher, _runner);
             _bridge.Attach();
 
             var frontendPath = ResolveFrontendPath();
@@ -47,6 +56,25 @@ public partial class MainWindow : Window
             Browser.NavigateToString(UiCommandBridge.ErrorPage($"WebView2 could not be initialized: {ex.Message}"));
         }
     }
+
+    private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ClickCount == 2)
+        {
+            ToggleMaximize();
+            return;
+        }
+
+        try { DragMove(); } catch (InvalidOperationException) { }
+    }
+
+    private void MinimizeButton_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
+
+    private void MaximizeButton_Click(object sender, RoutedEventArgs e) => ToggleMaximize();
+
+    private void CloseButton_Click(object sender, RoutedEventArgs e) => Close();
+
+    private void ToggleMaximize() => WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
 
     private static string FindBackendRoot()
     {

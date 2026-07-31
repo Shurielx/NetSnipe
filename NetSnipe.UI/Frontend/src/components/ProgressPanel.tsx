@@ -10,7 +10,7 @@ export default function ProgressPanel({ progress, running, onCancel }: Props) {
   if (!running && !progress) return null;
   const total = Number(progress?.total_seconds ?? 0);
   const elapsed = Number(progress?.elapsed_seconds ?? 0);
-  const percent = total > 0 ? Math.min(100, (elapsed / total) * 100) : 0;
+  const percent = total > 0 ? Math.min(100, Math.max(0, (elapsed / total) * 100)) : 0;
 
   return (
     <div className="progress-panel">
@@ -20,7 +20,7 @@ export default function ProgressPanel({ progress, running, onCancel }: Props) {
       </div>
       <div className="progress-label">
         <span>{progress?.target ?? "Preparing target..."}</span>
-        <span>{elapsed.toFixed(1)} / {total || "?"} s</span>
+        <span>{Math.round(percent)}%</span>
       </div>
       <div className="progress-track"><div className="progress-value" style={{ width: `${percent}%` }} /></div>
       <div className="progress-stats">

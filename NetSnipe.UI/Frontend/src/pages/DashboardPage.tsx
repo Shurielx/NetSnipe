@@ -14,7 +14,7 @@ export default function DashboardPage({ status, targets, monitorRunning, onOpen,
   const gateway = String(status.gateway ?? "Not detected");
   return (
     <>
-      <PageHeader eyebrow="FIELD OVERVIEW" title="Understand the connection before changing it." description="A local-first workspace for measuring Wi-Fi stability, testing specific targets and applying reversible profiles." action={<button className="button button-quiet" onClick={onRefresh}>Refresh status</button>} />
+      <PageHeader eyebrow="FIELD OVERVIEW" title="Understand the connection before changing it." description="Start with a broad connection check. Use the focused tests only when you need to investigate a specific part of the path." action={<button className="button button-quiet" onClick={onRefresh}>Refresh status</button>} />
       <div className="hero-grid">
         <Panel className="hero-panel" eyebrow="CURRENT LINK" title={String(status.status ?? "Unknown")}>
           <p className="hero-copy">{String(status.description ?? "The adapter snapshot is not available yet.")}</p>
@@ -25,12 +25,16 @@ export default function DashboardPage({ status, targets, monitorRunning, onOpen,
           <div className="safety-line"><span className="dot dot-green" /> {String(status.backup_count ?? 0)} saved backup(s)</div>
         </Panel>
       </div>
-      <div className="section-heading"><div><div className="eyebrow">QUICK START</div><h2>Pick one clear next step</h2></div></div>
-      <div className="quick-grid">
-        <button className="quick-card" onClick={() => onOpen("diagnostics")}><span className="quick-number">01</span><strong>One-time diagnostics</strong><span>Gateway plus public references. About 60 seconds. Read-only.</span></button>
-        <button className="quick-card" onClick={() => onOpen("ping")}><span className="quick-number">02</span><strong>Custom latency test</strong><span>Ping one saved, local or game-related target with your own limits.</span></button>
-        <button className="quick-card" onClick={() => onOpen("bufferbloat")}><span className="quick-number">03</span><strong>Check bufferbloat</strong><span>Compare gateway latency at idle and while downloading a temporary file.</span></button>
-      </div>
+       <div className="section-heading"><div><div className="eyebrow">QUICK START</div><h2>Pick one clear next step</h2></div></div>
+       <div className="quick-grid">
+         <button className="quick-card" onClick={() => onOpen("diagnostics")}><span className="quick-number">01 / START HERE</span><strong>Connection check</strong><span>Compares your router with two Internet references. Best first test when you do not know what is wrong.</span></button>
+         <button className="quick-card" onClick={() => onOpen("ping")}><span className="quick-number">02 / FOCUS</span><strong>Target ping</strong><span>Measures one exact host, such as a game server. Best for checking a suspected destination.</span></button>
+         <button className="quick-card" onClick={() => onOpen("bufferbloat")}><span className="quick-number">03 / UNDER LOAD</span><strong>Bufferbloat check</strong><span>Shows whether downloads make your router latency jump. Best when gaming suffers during downloads.</span></button>
+       </div>
+       <Panel className="how-it-works" eyebrow="WHICH TEST DO I NEED?" title="Each test answers a different question">
+         <div className="test-guide"><div><strong>Connection check</strong><span>Is the local link or the wider Internet unstable?</span></div><div><strong>Target ping</strong><span>Is this particular host slow, unreachable or dropping packets?</span></div><div><strong>DNS check</strong><span>Can my configured DNS servers turn names into addresses quickly?</span></div><div><strong>Connection history</strong><span>Does the problem come and go while I am not actively testing?</span></div></div>
+         <p className="field-help">These tests complement each other: diagnostics is a quick multi-point snapshot, target ping is a precise experiment, DNS checks name lookup, and history monitor records the connection continuously.</p>
+       </Panel>
       <div className="two-column-grid">
         <Panel eyebrow="TARGET LIBRARY" title="Saved custom targets">
           {targets.length ? <div className="target-list">{targets.map((target) => <div className="target-row" key={target.id}><span>{target.name}</span><code>{target.address}</code></div>)}</div> : <p className="empty-copy">No custom targets yet. Add one from the Custom ping screen.</p>}
