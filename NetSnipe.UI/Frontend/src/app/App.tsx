@@ -35,6 +35,11 @@ export default function App() {
 
   useEffect(() => bridge.onProgress(setProgress), []);
 
+  useEffect(() => {
+    const element = disclaimerScrollRef.current;
+    if (disclaimerOpen && element && element.scrollHeight <= element.clientHeight) setDisclaimerRead(true);
+  }, [disclaimerOpen]);
+
   const refreshStatus = async () => {
     try {
       const response = await api.status();
