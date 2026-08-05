@@ -13,6 +13,28 @@ computer.
 
 ---
 
+## Development Status
+
+NetSnipe is currently **not under active development**. I am focusing on other,
+more ambitious projects that are currently a higher priority for me.
+
+The project is not abandoned. Once the project I am currently working on is
+finished to a level I am satisfied with, I plan to return to NetSnipe and
+continue improving it.
+
+This repository currently contains a heavily developer-oriented, unfinished
+version. The core assumptions are in place and the basic functionality works,
+including settings, adapter information, profile previews and basic ping
+tests. However, advanced features are not guaranteed to work correctly, the UI
+still needs substantial polishing, and the project should not be treated as a
+reliable production or diagnostic tool yet.
+
+The current state has been checked with the backend smoke test and the
+frontend production build. That does not mean that every network operation or
+advanced feature has been fully tested.
+
+---
+
 ## Start Here
 
 Most people should download the installer:
