@@ -71,6 +71,44 @@ some adapter and network profile operations.
 - Read-only diagnostics do not change your settings. Profile and adapter
   actions can make changes, with backups created first.
 
+## Privacy
+
+NetSnipe is designed to work locally. It does not intentionally include
+telemetry or send reports to the author. Runtime data, including targets,
+measurements, reports, logs and configuration backups, is stored locally in
+`%LOCALAPPDATA%\NetSnipe\`.
+
+Network tests still communicate with the systems required by the test. For
+example, ping and DNS tests contact the selected hosts or configured DNS
+servers, and the bufferbloat test downloads a temporary test file from a
+Cloudflare endpoint. Review the source and the test settings if this matters
+for your network or privacy requirements.
+
+## Disclaimer
+
+NetSnipe is provided **as is, without warranty**. It is an unfinished,
+developer-oriented project and its results, backups and safeguards are not
+guaranteed to be complete or correct.
+
+Some features require Administrator privileges and can modify Windows network
+profiles, adapter settings, registry values or other system configuration.
+Although NetSnipe attempts to create backups before changes, a backup may be
+incomplete, unavailable or impossible to restore. Do not use the profile or
+optimization features on a system where you cannot tolerate configuration
+changes or possible service interruption. Create your own verified backups
+before making changes.
+
+By downloading, installing, launching or using NetSnipe, you acknowledge these
+risks and accept responsibility for choosing appropriate targets, settings and
+actions, for reviewing the results, and for maintaining your own system
+backups. To the maximum extent permitted by applicable law, the author and
+contributors are not responsible for data loss, configuration changes, service
+interruptions, hardware or software damage, security issues, or any other
+losses resulting from the use or inability to use this software.
+
+This notice does not replace the full warranty and liability terms in the
+[`GNU GPL v3 license`](LICENSE).
+
 ## Beta Version
 
 The `beta` branch contains changes for public testing. It may include bugs or
