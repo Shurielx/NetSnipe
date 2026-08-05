@@ -111,3 +111,10 @@ tr:last-child td { border-bottom: 0; }
 .status-large { display: flex; align-items: center; gap: 9px; margin: 17px 0; font-weight: 700; }.status-large.online { color: var(--green); }.status-large.offline { color: var(--muted); }
 .raw-block { max-height: 250px; overflow: auto; margin: 0; padding: 14px; color: var(--muted-strong); background: #081018; border-radius: 8px; font: 11px/1.5 "Cascadia Code", Consolas, monospace; white-space: pre-wrap; }
 .global-error { display: flex; gap: 13px; align-items: center; margin-top: 22px; padding: 12px 14px; font-size: 12px; }.global-error strong { color: var(--red); }.global-error span { flex: 1; }
+.disclaimer-backdrop { position: fixed; z-index: 10; inset: 0; display: grid; place-items: center; padding: 24px; background: rgba(3, 8, 12, .82); backdrop-filter: blur(7px); }
+.disclaimer-dialog { display: grid; width: min(680px, 100%); max-height: min(760px, 92vh); padding: 28px; background: linear-gradient(145deg, #142936, #0d1821); border: 1px solid rgba(93, 216, 223, .48); border-radius: 16px; box-shadow: 0 24px 80px rgba(0, 0, 0, .58); }
+.disclaimer-dialog h1 { margin: 8px 0 18px; color: var(--text); letter-spacing: -.04em; font-size: clamp(26px, 4vw, 38px); line-height: 1.05; }
+.disclaimer-scroll { min-height: 0; overflow-y: auto; padding: 2px 16px 4px 0; color: var(--muted-strong); font-size: 13px; line-height: 1.65; scrollbar-color: var(--cyan-deep) var(--field); }
+.disclaimer-scroll p { margin: 0 0 16px; }.disclaimer-scroll p:last-child { margin-bottom: 4px; color: var(--cyan); font-weight: 650; }
+.disclaimer-actions { display: flex; justify-content: space-between; gap: 18px; align-items: center; margin-top: 20px; padding-top: 17px; border-top: 1px solid var(--line); }.disclaimer-actions span { color: var(--muted); font-size: 11px; line-height: 1.4; }
+@media (max-width: 560px) { .disclaimer-backdrop { padding: 12px; }.disclaimer-dialog { max-height: 94vh; padding: 21px; }.disclaimer-actions { align-items: stretch; flex-direction: column; gap: 10px; }.disclaimer-actions .button { width: 100%; } }

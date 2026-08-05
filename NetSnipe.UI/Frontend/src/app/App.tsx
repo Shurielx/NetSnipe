@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AppShell, { type Page } from "../components/AppShell";
 import ProgressPanel from "../components/ProgressPanel";
 import ResultSummary, { asRecord } from "../components/ResultSummary";
@@ -29,6 +29,9 @@ export default function App() {
   const [progress, setProgress] = useState<ProgressEvent | null>(null);
   const [result, setResult] = useState<BackendResult | null>(null);
   const [error, setError] = useState("");
+  const [disclaimerOpen, setDisclaimerOpen] = useState(true);
+  const [disclaimerRead, setDisclaimerRead] = useState(false);
+  const disclaimerScrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => bridge.onProgress(setProgress), []);
 
@@ -129,11 +132,34 @@ export default function App() {
   };
 
   return (
-    <AppShell page={page} onNavigate={setPage} adapter={String(status.adapter ?? "Detecting...")} status={error ? "Attention" : running ? "Running" : "Ready"}>
-      {pageContent()}
-      {error && <div className="global-error"><strong>Action unavailable</strong><span>{error}</span></div>}
-      {running && <ProgressPanel progress={progress} running onCancel={() => bridge.cancel()} />}
-      {!running && result && <div className="operation-result"><ResultSummary result={result} action={activeAction} /></div>}
-    </AppShell>
+    <>
+      <AppShell page={page} onNavigate={setPage} adapter={String(status.adapter ?? "Detecting...")} status={error ? "Attention" : running ? "Running" : "Ready"}>
+        {pageContent()}
+        {error && <div className="global-error"><strong>Action unavailable</strong><span>{error}</span></div>}
+        {running && <ProgressPanel progress={progress} running onCancel={() => bridge.cancel()} />}
+        {!running && result && <div className="operation-result"><ResultSummary result={result} action={activeAction} /></div>}
+      </AppShell>
+      {disclaimerOpen && <div className="disclaimer-backdrop">
+        <section className="disclaimer-dialog" role="dialog" aria-modal="true" aria-labelledby="disclaimer-title">
+          <div className="eyebrow">READ BEFORE USE</div>
+          <h1 id="disclaimer-title">Disclaimer: Unfinished Project</h1>
+          <div className="disclaimer-scroll" ref={disclaimerScrollRef} onScroll={(event) => {
+            const element = event.currentTarget;
+            if (element.scrollTop + element.clientHeight >= element.scrollHeight - 8) setDisclaimerRead(true);
+          }}>
+            <p>NetSnipe is an unfinished developer project. Basic features may work, but advanced features, results, backups and safeguards are not guaranteed to be complete or correct.</p>
+            <p>Some actions require Administrator privileges and can change Windows network profiles, adapter settings, registry values or other system configuration. Create your own verified backup before using profile or optimization features.</p>
+            <p>Network tests contact selected IP addresses, hostnames and DNS servers. Ping, DNS, bufferbloat and monitoring traffic may be rate-limited, blocked or logged by your network, provider or the destination. NetSnipe cannot guarantee that an address, DNS server or service will not impose limits, blocks or bans as a result of test traffic.</p>
+            <p>The default values are intended to be reasonable starting points, but they are not a promise that every network, provider, firewall or destination will accept them. Choose targets and test settings responsibly.</p>
+            <p>Use NetSnipe at your own risk. The author and contributors are not responsible for data loss, configuration changes, interruptions, bans, blocks, hardware or software damage, or other losses resulting from use of the application, to the maximum extent permitted by applicable law.</p>
+            <p>Scroll to the bottom to confirm that you have read and understood this notice.</p>
+          </div>
+          <div className="disclaimer-actions">
+            <span>{disclaimerRead ? "You have reached the end of the notice." : "Scroll to the bottom to enable Accept."}</span>
+            <button className="button button-primary" disabled={!disclaimerRead} onClick={() => setDisclaimerOpen(false)}>Accept</button>
+          </div>
+        </section>
+      </div>}
+    </>
   );
 }
